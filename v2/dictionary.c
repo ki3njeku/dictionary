@@ -16,12 +16,16 @@ void insert_word(char* word, layer* node);
 void build_word(char* word, layer* root);
 void kill_tree(layer* root);
 void build_dictionary(FILE* file, layer* root);
+void search_word(char keyword[], layer* root);
 
 int main (void){
     layer* root = calloc(1, sizeof(layer));
     root->letter = '!';
     FILE* input = fopen("common.txt", "r");
     build_dictionary(input, root);
+    char* word;
+    scanf("%s", word);
+    search_word(word, root);
     fclose(input);
     kill_tree(root);
 }
@@ -52,7 +56,7 @@ void build_dictionary(FILE* file, layer* root){
 void build_word(char* word, layer* root){
     int len = strlen(word);
     layer* tmp = root;
-    layer* ptr = {0};
+    layer* ptr = NULL;
     for(int i = 0; i < len; i++){
         if(tmp->next_layers[(word[i] - 'a')] == NULL){
             ptr = build_layer(word[i], tmp);
@@ -84,7 +88,13 @@ void kill_tree(layer* root){
 //Function to search for words
 void search_word(char keyword[], layer* root){
     int len = strlen(keyword);
+    layer* tmp = root;
     for(int i = 0; i < len; i++){
-        
+        if(tmp->next_layers[(keyword[i] - 'a')] == NULL){
+            printf("Word not found\n");
+            return;
+        }
+        tmp = tmp->next_layers[(keyword[i] - 'a')];
     }
+    printf("word found\n");
 }
